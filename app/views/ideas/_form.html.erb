@@ -1,0 +1,24 @@
+<%= simple_form_for(@idea) do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :name %>
+    <%= f.input :description %>
+    Required skills
+    <% @roles.each do |role| %>
+      <label>
+        <%= f.check_box "role_ids", {:multiple => true}, role.id %>
+        <%= role.name %>
+        <br/>
+      </label>
+    <% end %>
+    <%= f.input :additional_info %>
+    <%= f.association :platform, as: :radio_buttons%>
+    <%= f.hidden_field :user_id, value: current_user.id %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit %>
+  </div>
+<% end %>
+

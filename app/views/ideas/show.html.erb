@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @idea.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @idea.description %>
+</p>
+
+<p>
+  <strong>Required skills:</strong>
+  <%= @idea.arr_name_skill %>
+</p>
+
+<p>
+  <strong>Additional info:</strong>
+  <%= @idea.additional_info %>
+</p>
+
+<p>
+  <strong>Platform:</strong>
+  <%= @idea.platform.try(:name) %>
+</p>
+
+
+<% if !@idea.user_already_respond?(current_user.id) && @idea.can_respond?(current_user.role_id) %>
+  <%= simple_form_for(@idea, url: respond_idea_path, method: :put) do |f| %>
+    <%= f.error_notification %>
+    <div class="form-actions">
+      <%= f.button :submit, "Respond" %>
+    </div>
+  <% end %>
+<% end %>
+
+
+<%= link_to 'Edit', edit_idea_path(@idea) %> |
+<%= link_to 'Back', ideas_path %>

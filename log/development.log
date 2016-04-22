@@ -1,0 +1,1080 @@
+  [1m[36m (1.0ms)[0m  [1mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL) [0m
+  [1m[35m (0.1ms)[0m  select sqlite_version(*)
+  [1m[36m (0.9ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35mActiveRecord::SchemaMigration Load (0.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations"
+Migrating to CreateUsers (20160417105652)
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  CREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "password" varchar, "password_digest" varchar, "role_id" integer, "admin" boolean DEFAULT 'f', "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160417105652"]]
+  [1m[35m (0.7ms)[0m  commit transaction
+Migrating to CreateRoles (20160417105714)
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.4ms)[0m  CREATE TABLE "roles" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160417105714"]]
+  [1m[35m (0.7ms)[0m  commit transaction
+Migrating to CreateIdeas (20160418183209)
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "ideas" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "description" text, "required_skills" varchar, "additional_info" varchar, "platform_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160418183209"]]
+  [1m[35m (0.6ms)[0m  commit transaction
+Migrating to CreatePlatforms (20160418184340)
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "platforms" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160418184340"]]
+  [1m[35m (0.7ms)[0m  commit transaction
+Migrating to CreateIdeasUsers (20160418184341)
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  CREATE TABLE "ideas_users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "idea_id" integer, "action_type" integer) 
+  [1m[36m (0.1ms)[0m  [1mCREATE  INDEX "index_ideas_users_on_user_id" ON "ideas_users" ("user_id")[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_ideas_users_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_ideas_users_on_user_id' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1mCREATE  INDEX "index_ideas_users_on_idea_id" ON "ideas_users" ("idea_id")[0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20160418184341"]]
+  [1m[36m (0.8ms)[0m  [1mcommit transaction[0m
+Migrating to AddRoleIdsToIdeas (20160422103016)
+  [1m[35m (0.0ms)[0m  begin transaction
+  [1m[36m (0.2ms)[0m  [1mALTER TABLE "ideas" ADD "role_ids" varchar[0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "schema_migrations" ("version") VALUES (?)  [["version", "20160422103016"]]
+  [1m[36m (0.7ms)[0m  [1mcommit transaction[0m
+Migrating to RemoveRequiredSkillsFromIdeas (20160422141426)
+  [1m[35m (0.0ms)[0m  begin transaction
+  [1m[36m (0.9ms)[0m  [1mCREATE TEMPORARY TABLE "aideas" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "description" text, "required_skills" varchar, "additional_info" varchar, "platform_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, "role_ids" varchar) [0m
+  [1m[35m (0.0ms)[0m  SELECT * FROM "ideas"
+  [1m[36m (0.2ms)[0m  [1mDROP TABLE "ideas"[0m
+  [1m[35m (0.1ms)[0m  CREATE TABLE "ideas" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "description" text, "additional_info" varchar, "platform_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, "role_ids" varchar) 
+  [1m[36m (0.0ms)[0m  [1mSELECT * FROM "aideas"[0m
+  [1m[35m (0.2ms)[0m  DROP TABLE "aideas"
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20160422141426"]]
+  [1m[35m (0.9ms)[0m  commit transaction
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_ideas_users_on_idea_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_ideas_users_on_idea_id' AND type='index'
+
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_ideas_users_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_ideas_users_on_user_id' AND type='index'
+[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mRole Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Designer' LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "roles" ("name", "created_at", "updated_at") VALUES (?, ?, ?)  [["name", "Designer"], ["created_at", "2016-04-22 16:28:59.482502"], ["updated_at", "2016-04-22 16:28:59.482502"]]
+  [1m[36m (0.8ms)[0m  [1mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  begin transaction
+  [1m[36mRole Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Developer' LIMIT 1[0m
+  [1m[35mSQL (0.1ms)[0m  INSERT INTO "roles" ("name", "created_at", "updated_at") VALUES (?, ?, ?)  [["name", "Developer"], ["created_at", "2016-04-22 16:28:59.485830"], ["updated_at", "2016-04-22 16:28:59.485830"]]
+  [1m[36m (0.7ms)[0m  [1mcommit transaction[0m
+  [1m[35mRole Load (0.2ms)[0m  SELECT  "roles".* FROM "roles"  ORDER BY "roles"."id" ASC LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('tartan@cmu.edu') LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "users" ("name", "email", "password_digest", "admin", "role_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?)[0m  [["name", "Tartan"], ["email", "tartan@cmu.edu"], ["password_digest", "$2a$10$suJAW3g8J85b9RG7e2ZdB.u2BoSYlykXNN/rzijAHFCt0ff9iI.3q"], ["admin", "t"], ["role_id", 1], ["created_at", "2016-04-22 16:28:59.594886"], ["updated_at", "2016-04-22 16:28:59.594886"]]
+  [1m[35m (2.1ms)[0m  commit transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35mPlatform Exists (0.1ms)[0m  SELECT  1 AS one FROM "platforms" WHERE "platforms"."name" = 'Web App' LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "platforms" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Web App"], ["created_at", "2016-04-22 16:28:59.605490"], ["updated_at", "2016-04-22 16:28:59.605490"]]
+  [1m[35m (0.7ms)[0m  commit transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35mPlatform Exists (0.1ms)[0m  SELECT  1 AS one FROM "platforms" WHERE "platforms"."name" = 'iPhone App' LIMIT 1
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "platforms" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "iPhone App"], ["created_at", "2016-04-22 16:28:59.608165"], ["updated_at", "2016-04-22 16:28:59.608165"]]
+  [1m[35m (0.7ms)[0m  commit transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35mPlatform Exists (0.1ms)[0m  SELECT  1 AS one FROM "platforms" WHERE "platforms"."name" = 'Android App' LIMIT 1
+  [1m[36mSQL (0.1ms)[0m  [1mINSERT INTO "platforms" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Android App"], ["created_at", "2016-04-22 16:28:59.610217"], ["updated_at", "2016-04-22 16:28:59.610217"]]
+  [1m[35m (0.7ms)[0m  commit transaction
+
+
+Started GET "/" for ::1 at 2016-04-22 19:30:33 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.7ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by VisitorsController#index as HTML
+  [1m[35mPlatform Load (0.8ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mRole Load (0.6ms)[0m  [1mSELECT "roles".* FROM "roles"[0m
+  [1m[35mIdea Load (0.6ms)[0m  SELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC
+  Rendered visitors/index.html.erb within layouts/application (18.3ms)
+DEPRECATION WARNING on line 78 of /Users/Mohammed1-95/.rvm/gems/ruby-2.0.0-p643@IdeaManager/gems/foundation-rails-5.5.3.2/vendor/assets/stylesheets/foundation/components/_top-bar.scss: #{} interpolation near operators will be simplified
+in a future version of Sass. To preserve the current behavior, use quotes:
+
+  unquote("#{lower-bound($medium-range)}")
+
+
+  [1m[36mUser Load (0.8ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  Rendered layouts/_navigation_links_left.html.erb (28.8ms)
+  Rendered layouts/_navigation_links_right.html.erb (1.3ms)
+  Rendered layouts/_navigation.html.erb (33.6ms)
+  Rendered layouts/_messages.html.erb (0.4ms)
+Completed 200 OK in 10069ms (Views: 10031.7ms | ActiveRecord: 4.0ms)
+
+
+Started GET "/users/1" for ::1 at 2016-04-22 19:30:50 +0300
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by UsersController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mUser Load (1.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mRole Load (0.3ms)[0m  SELECT  "roles".* FROM "roles" WHERE "roles"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered users/show.html.erb within layouts/application (23.1ms)
+  Rendered layouts/_navigation_links_left.html.erb (1.8ms)
+  Rendered layouts/_navigation_links_right.html.erb (1.2ms)
+  Rendered layouts/_navigation.html.erb (6.3ms)
+  Rendered layouts/_messages.html.erb (0.4ms)
+Completed 200 OK in 593ms (Views: 549.8ms | ActiveRecord: 2.7ms)
+
+
+Started GET "/users" for ::1 at 2016-04-22 19:30:54 +0300
+Processing by UsersController#index as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users".* FROM "users"
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT  "roles".* FROM "roles" WHERE "roles"."id" = ? LIMIT 1[0m  [["id", 1]]
+  Rendered users/index.html.erb within layouts/application (3.2ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.5ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.4ms)
+  Rendered layouts/_navigation.html.erb (3.1ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 121ms (Views: 119.6ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/users/new" for ::1 at 2016-04-22 19:30:55 +0300
+Processing by UsersController#new as HTML
+  [1m[35mRole Load (0.2ms)[0m  SELECT "roles".* FROM "roles"
+  Rendered users/_form.html.erb (142.1ms)
+  Rendered users/new.html.erb within layouts/application (143.8ms)
+  [1m[36mUser Load (0.3ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  Rendered layouts/_navigation_links_left.html.erb (2.2ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.7ms)
+  Rendered layouts/_navigation.html.erb (5.0ms)
+  Rendered layouts/_messages.html.erb (0.2ms)
+Completed 200 OK in 214ms (Views: 209.8ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:31:01 +0300
+Processing by VisitorsController#index as HTML
+  [1m[35mPlatform Load (0.2ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles"[0m
+  [1m[35mIdea Load (0.1ms)[0m  SELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC
+  Rendered visitors/index.html.erb within layouts/application (6.7ms)
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  Rendered layouts/_navigation_links_left.html.erb (1.2ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (4.1ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 86ms (Views: 76.6ms | ActiveRecord: 0.7ms)
+
+
+Started GET "/ideas/new" for ::1 at 2016-04-22 19:31:03 +0300
+Processing by IdeasController#new as HTML
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles"[0m
+  [1m[35mPlatform Load (0.2ms)[0m  SELECT "platforms".* FROM "platforms"
+  Rendered ideas/_form.html.erb (15.8ms)
+  Rendered ideas/new.html.erb within layouts/application (17.5ms)
+  Rendered layouts/_navigation_links_left.html.erb (2.8ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.5ms)
+  Rendered layouts/_navigation.html.erb (5.0ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 157ms (Views: 149.5ms | ActiveRecord: 0.5ms)
+
+
+Started POST "/ideas" for ::1 at 2016-04-22 19:31:13 +0300
+Processing by IdeasController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"PbXHTnX6D0yLg3dvm72mqkBVlEF6iWAKpbNbpk0fP8i0LNY6CmPH7f/TycdXIjI6S8GYgtYGd6wfReADwDxSMg==", "idea"=>{"name"=>"Game", "description"=>"Game", "role_ids"=>["0", "1", "0", "2"], "additional_info"=>"Game", "platform_id"=>"1", "user_id"=>"1"}, "commit"=>"Create Idea"}
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+Unpermitted parameters: role_ids, user_id
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mSQL (0.8ms)[0m  [1mINSERT INTO "ideas" ("name", "description", "additional_info", "platform_id", "role_ids", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?)[0m  [["name", "Game"], ["description", "Game"], ["additional_info", "Game"], ["platform_id", 1], ["role_ids", "---\n- 0\n- 1\n- 0\n- 2\n"], ["created_at", "2016-04-22 16:31:13.457101"], ["updated_at", "2016-04-22 16:31:13.457101"]]
+  [1m[35mSQL (0.9ms)[0m  INSERT INTO "ideas_users" ("user_id", "idea_id", "action_type") VALUES (?, ?, ?)  [["user_id", 1], ["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.8ms)[0m  [1mcommit transaction[0m
+  [1m[35mIdeasUser Load (0.3ms)[0m  SELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1  [["idea_id", 1]]
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+  [1m[35mSQL (0.5ms)[0m  UPDATE "ideas_users" SET "action_type" = ? WHERE "ideas_users"."id" = ?  [["action_type", 0], ["id", 1]]
+  [1m[36m (0.8ms)[0m  [1mcommit transaction[0m
+Redirected to http://localhost:3000/ideas/1
+Completed 302 Found in 41ms (ActiveRecord: 4.4ms)
+
+
+Started GET "/ideas/1" for ::1 at 2016-04-22 19:31:13 +0300
+Processing by IdeasController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[35mIdea Load (0.2ms)[0m  SELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.2ms)[0m  SELECT "roles"."name" FROM "roles" WHERE "roles"."id" IN (0, 1, 0, 2)
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.2ms)[0m  SELECT "users".id FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ?  [["idea_id", 1]]
+  Rendered ideas/show.html.erb within layouts/application (13.6ms)
+  Rendered layouts/_navigation_links_left.html.erb (1.5ms)
+  Rendered layouts/_navigation_links_right.html.erb (1.2ms)
+  Rendered layouts/_navigation.html.erb (5.7ms)
+  Rendered layouts/_messages.html.erb (0.6ms)
+Completed 200 OK in 138ms (Views: 136.2ms | ActiveRecord: 0.7ms)
+
+
+Started DELETE "/logout" for ::1 at 2016-04-22 19:31:16 +0300
+Processing by SessionsController#destroy as HTML
+  Parameters: {"authenticity_token"=>"tFvu+0SBooxAqMjA+92w9BgYhc3I/r3/gTESQPVJXrI9wv+POxhqLTT4dmg3QiRkE4yJDmRxqlk7x6nleGozSA=="}
+Redirected to http://localhost:3000/
+Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:31:16 +0300
+Processing by VisitorsController#index as HTML
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT "platforms".* FROM "platforms"[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mIdeasUser Load (0.1ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND 1=0  [["idea_id", 1], ["role_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.0ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND 1=0  [["idea_id", 1], ["role_id", 2]]
+  Rendered visitors/index.html.erb within layouts/application (8.9ms)
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_left.html.erb (1.6ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_right.html.erb (1.3ms)
+  Rendered layouts/_navigation.html.erb (5.2ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 66ms (Views: 63.7ms | ActiveRecord: 1.1ms)
+
+
+Started GET "/signup" for ::1 at 2016-04-22 19:31:17 +0300
+Processing by UsersController#new as HTML
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles"[0m
+  Rendered users/_form.html.erb (8.8ms)
+  Rendered users/new.html.erb within layouts/application (9.6ms)
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_left.html.erb (1.2ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_right.html.erb (0.4ms)
+  Rendered layouts/_navigation.html.erb (3.3ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 74ms (Views: 72.7ms | ActiveRecord: 0.3ms)
+
+
+Started POST "/users" for ::1 at 2016-04-22 19:32:24 +0300
+Processing by UsersController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"U5YX38WGBqf5l/UKkEsJ1tazCmo6tKES/TsgO2EwFivaDwaruh/OBo3HS6Jc1J1G3ScGqZY7trRHzZue7BN70Q==", "user"=>{"name"=>"Mohammed Al-dosari", "email"=>"al-dosari-95@hotmail.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "role_id"=>"1"}, "commit"=>"Create User"}
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mUser Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('al-dosari-95@hotmail.com') LIMIT 1[0m
+  [1m[35mSQL (0.4ms)[0m  INSERT INTO "users" ("name", "email", "password_digest", "role_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)  [["name", "Mohammed Al-dosari"], ["email", "al-dosari-95@hotmail.com"], ["password_digest", "$2a$10$2Mc35lRJDwWG3CVHYlPUOekdjHF8ITSZNaGzYxL9pDldd3Twf.ZRO"], ["role_id", 1], ["created_at", "2016-04-22 16:32:24.495384"], ["updated_at", "2016-04-22 16:32:24.495384"]]
+  [1m[36m (0.7ms)[0m  [1mcommit transaction[0m
+Redirected to http://localhost:3000/users/2
+Completed 302 Found in 85ms (ActiveRecord: 1.4ms)
+
+
+Started GET "/users/2" for ::1 at 2016-04-22 19:32:24 +0300
+Processing by UsersController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+Redirected to http://localhost:3000/
+Filter chain halted as :authenticate rendered or redirected
+Completed 302 Found in 2ms (ActiveRecord: 0.2ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:32:24 +0300
+Processing by VisitorsController#index as HTML
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT "platforms".* FROM "platforms"[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mIdeasUser Load (0.1ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (1.3ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND 1=0  [["idea_id", 1], ["role_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND 1=0  [["idea_id", 1], ["role_id", 2]]
+  Rendered visitors/index.html.erb within layouts/application (12.5ms)
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_left.html.erb (1.0ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_right.html.erb (0.6ms)
+  Rendered layouts/_navigation.html.erb (3.3ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 80ms (Views: 77.0ms | ActiveRecord: 2.1ms)
+
+
+Started GET "/ideas" for ::1 at 2016-04-22 19:32:29 +0300
+Processing by IdeasController#index as HTML
+  [1m[36mPlatform Load (0.2ms)[0m  [1mSELECT "platforms".* FROM "platforms"[0m
+  [1m[35mIdea Load (0.1ms)[0m  SELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC
+  [1m[36mIdeasUser Load (0.1ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "roles"."name" FROM "roles" WHERE "roles"."id" IN (0, 1, 0, 2)[0m
+  [1m[35mPlatform Load (0.0ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered ideas/index.html.erb within layouts/application (6.3ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_left.html.erb (0.8ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_right.html.erb (0.4ms)
+  Rendered layouts/_navigation.html.erb (2.7ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 62ms (Views: 60.6ms | ActiveRecord: 0.7ms)
+
+
+Started GET "/ideas/1" for ::1 at 2016-04-22 19:32:30 +0300
+Processing by IdeasController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[35mIdea Load (0.1ms)[0m  SELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+Redirected to http://localhost:3000/
+Filter chain halted as :authenticate rendered or redirected
+Completed 302 Found in 2ms (ActiveRecord: 0.2ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:32:30 +0300
+Processing by VisitorsController#index as HTML
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles"[0m
+  [1m[35mIdea Load (0.1ms)[0m  SELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mIdeasUser Load (0.1ms)[0m  SELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1  [["idea_id", 1], ["action_type", 0]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  [["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.0ms)[0m  [1mSELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND 1=0[0m  [["idea_id", 1], ["role_id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  [["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.0ms)[0m  [1mSELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND 1=0[0m  [["idea_id", 1], ["role_id", 2]]
+  Rendered visitors/index.html.erb within layouts/application (6.2ms)
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_left.html.erb (1.2ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_right.html.erb (0.6ms)
+  Rendered layouts/_navigation.html.erb (3.9ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 61ms (Views: 59.4ms | ActiveRecord: 0.8ms)
+
+
+Started GET "/login" for ::1 at 2016-04-22 19:32:33 +0300
+Processing by SessionsController#new as HTML
+  Rendered sessions/new.html.erb within layouts/application (5.2ms)
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_left.html.erb (1.1ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_right.html.erb (0.4ms)
+  Rendered layouts/_navigation.html.erb (2.8ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 66ms (Views: 64.8ms | ActiveRecord: 0.2ms)
+
+
+Started POST "/login" for ::1 at 2016-04-22 19:32:37 +0300
+Processing by SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"XPzM2Pi/sYcXVHCF5hBm3LcLnwTaxh+8m7/P9BqYsP/VZd2shyZ5JmMEzi0qj/JMvJ+Tx3ZJCBohSXRRl7vdBQ==", "sessions"=>{"email"=>"al-dosari-95@hotmail.com", "password"=>"[FILTERED]"}, "commit"=>"Login"}
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."email" = ? LIMIT 1  [["email", "al-dosari-95@hotmail.com"]]
+Redirected to http://localhost:3000/
+Completed 302 Found in 76ms (ActiveRecord: 0.2ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:32:37 +0300
+Processing by VisitorsController#index as HTML
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT "platforms".* FROM "platforms"[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mIdeasUser Load (0.1ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND 1=0  [["idea_id", 1], ["role_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND 1=0  [["idea_id", 1], ["role_id", 2]]
+  Rendered visitors/index.html.erb within layouts/application (6.3ms)
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 2]]
+  Rendered layouts/_navigation_links_left.html.erb (0.8ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (2.5ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 64ms (Views: 62.4ms | ActiveRecord: 0.7ms)
+
+
+Started GET "/ideas" for ::1 at 2016-04-22 19:32:39 +0300
+Processing by IdeasController#index as HTML
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mIdeasUser Load (0.1ms)[0m  SELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1  [["idea_id", 1], ["action_type", 0]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "roles"."name" FROM "roles" WHERE "roles"."id" IN (0, 1, 0, 2)
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered ideas/index.html.erb within layouts/application (5.5ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.4ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (3.0ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 59ms (Views: 57.7ms | ActiveRecord: 0.6ms)
+
+
+Started GET "/ideas/1" for ::1 at 2016-04-22 19:32:41 +0300
+Processing by IdeasController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36m (0.2ms)[0m  [1mSELECT "roles"."name" FROM "roles" WHERE "roles"."id" IN (0, 1, 0, 2)[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "users".id FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ?[0m  [["idea_id", 1]]
+  Rendered ideas/show.html.erb within layouts/application (4.4ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.5ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (2.2ms)
+  Rendered layouts/_messages.html.erb (0.0ms)
+Completed 200 OK in 128ms (Views: 126.0ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/users/2" for ::1 at 2016-04-22 19:32:46 +0300
+Processing by UsersController#show as HTML
+  Parameters: {"id"=>"2"}
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35mRole Load (0.1ms)[0m  SELECT  "roles".* FROM "roles" WHERE "roles"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered users/show.html.erb within layouts/application (1.2ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.6ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (3.3ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 59ms (Views: 57.6ms | ActiveRecord: 0.2ms)
+
+
+Started PUT "/ideas/1/respond" for ::1 at 2016-04-22 19:32:48 +0300
+Processing by IdeasController#respond as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"QBhsTU4xo/oWsLXn57qFDfgQGcGJCtMNps15oJ66B2LJgX05MahrW2LgC08rJRGd84QVAiWFxKscO8IFE5lqmA==", "commit"=>"Respond", "id"=>"1"}
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users".id FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ?  [["idea_id", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 2]]
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT "users".* FROM "users" WHERE "users"."id" IN (1, 2)[0m
+  [1m[35mUser Load (0.1ms)[0m  SELECT "users".* FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ?  [["idea_id", 1]]
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "ideas_users" ("idea_id", "user_id", "action_type") VALUES (?, ?, ?)[0m  [["idea_id", 1], ["user_id", 2], ["action_type", 1]]
+  [1m[35m (0.7ms)[0m  commit transaction
+Redirected to http://localhost:3000/ideas/1
+Completed 302 Found in 8ms (ActiveRecord: 1.5ms)
+
+
+Started GET "/ideas/1" for ::1 at 2016-04-22 19:32:48 +0300
+Processing by IdeasController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 2]]
+  [1m[36m (0.2ms)[0m  [1mSELECT "roles"."name" FROM "roles" WHERE "roles"."id" IN (0, 1, 0, 2)[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "users".id FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ?[0m  [["idea_id", 1]]
+  Rendered ideas/show.html.erb within layouts/application (2.5ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.4ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.4ms)
+  Rendered layouts/_navigation.html.erb (2.5ms)
+  Rendered layouts/_messages.html.erb (0.2ms)
+Completed 200 OK in 62ms (Views: 60.6ms | ActiveRecord: 0.5ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:32:50 +0300
+Processing by VisitorsController#index as HTML
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles"[0m
+  [1m[35mIdea Load (0.1ms)[0m  SELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mIdeasUser Load (0.1ms)[0m  SELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1  [["idea_id", 1], ["action_type", 0]]
+  [1m[36mUser Load (0.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  [["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2[0m  [["idea_id", 1], ["role_id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  [["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2[0m  [["idea_id", 1], ["role_id", 2]]
+  Rendered visitors/index.html.erb within layouts/application (6.8ms)
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 2]]
+  Rendered layouts/_navigation_links_left.html.erb (0.8ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (2.6ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 65ms (Views: 63.4ms | ActiveRecord: 0.8ms)
+
+
+Started DELETE "/logout" for ::1 at 2016-04-22 19:33:40 +0300
+Processing by SessionsController#destroy as HTML
+  Parameters: {"authenticity_token"=>"vIdrU9fXgFasqw25shTgYRAZQ/Ue6FFNq2osjYQVkj01HnonqE5I99j7sxF+i3TxG41PNrJnRusRnJcoCTb/xw=="}
+Redirected to http://localhost:3000/
+Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:33:40 +0300
+Processing by VisitorsController#index as HTML
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT "platforms".* FROM "platforms"[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mIdeasUser Load (0.1ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2  [["idea_id", 1], ["role_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.0ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2  [["idea_id", 1], ["role_id", 2]]
+  Rendered visitors/index.html.erb within layouts/application (5.9ms)
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_left.html.erb (1.9ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_right.html.erb (1.0ms)
+  Rendered layouts/_navigation.html.erb (5.8ms)
+  Rendered layouts/_messages.html.erb (0.2ms)
+Completed 200 OK in 133ms (Views: 131.0ms | ActiveRecord: 0.9ms)
+
+
+Started GET "/login" for ::1 at 2016-04-22 19:33:43 +0300
+Processing by SessionsController#new as HTML
+  Rendered sessions/new.html.erb within layouts/application (3.7ms)
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_left.html.erb (0.9ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_right.html.erb (0.4ms)
+  Rendered layouts/_navigation.html.erb (2.6ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 51ms (Views: 50.1ms | ActiveRecord: 0.1ms)
+
+
+Started POST "/login" for ::1 at 2016-04-22 19:33:48 +0300
+Processing by SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"JgKwVNpOIqAN/8unoGIdt9+Vbsz4mXFLzs1bTg17tyOvm6EgpdfqAXmvdQ9s/Ykn1AFiD1QWZu10O+DrgFja2Q==", "sessions"=>{"email"=>"tartan@cmu.edu", "password"=>"[FILTERED]"}, "commit"=>"Login"}
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."email" = ? LIMIT 1[0m  [["email", "tartan@cmu.edu"]]
+Redirected to http://localhost:3000/
+Completed 302 Found in 69ms (ActiveRecord: 0.1ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:33:48 +0300
+Processing by VisitorsController#index as HTML
+  [1m[35mPlatform Load (0.2ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles"[0m
+  [1m[35mIdea Load (0.1ms)[0m  SELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mIdeasUser Load (0.1ms)[0m  SELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1  [["idea_id", 1], ["action_type", 0]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  [["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2[0m  [["idea_id", 1], ["role_id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  [["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.0ms)[0m  [1mSELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2[0m  [["idea_id", 1], ["role_id", 2]]
+  Rendered visitors/index.html.erb within layouts/application (7.4ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered layouts/_navigation_links_left.html.erb (1.4ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.2ms)
+  Rendered layouts/_navigation.html.erb (2.7ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 52ms (Views: 50.1ms | ActiveRecord: 0.8ms)
+
+
+Started GET "/roles" for ::1 at 2016-04-22 19:33:50 +0300
+Processing by RolesController#index as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  Rendered roles/index.html.erb within layouts/application (2.1ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.5ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (2.1ms)
+  Rendered layouts/_messages.html.erb (0.0ms)
+Completed 200 OK in 114ms (Views: 112.9ms | ActiveRecord: 0.2ms)
+
+
+Started GET "/roles/new" for ::1 at 2016-04-22 19:33:51 +0300
+Processing by RolesController#new as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  Rendered roles/_form.html.erb (3.6ms)
+  Rendered roles/new.html.erb within layouts/application (5.5ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.5ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (2.4ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 53ms (Views: 51.7ms | ActiveRecord: 0.1ms)
+
+
+Started POST "/roles" for ::1 at 2016-04-22 19:33:54 +0300
+Processing by RolesController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"oavIePi+WT8wsJXJALMd8REb3JBbQSc2nCgKq7EiXLwoMtkMhyeRnkTgK2HMLIlhGo/QU/fOMJAm3rEOPAExRg==", "role"=>{"name"=>"Tester"}, "commit"=>"Create Role"}
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mRole Exists (0.1ms)[0m  SELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Tester' LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "roles" ("name", "created_at", "updated_at") VALUES (?, ?, ?)[0m  [["name", "Tester"], ["created_at", "2016-04-22 16:33:54.263121"], ["updated_at", "2016-04-22 16:33:54.263121"]]
+  [1m[35m (0.8ms)[0m  commit transaction
+Redirected to http://localhost:3000/roles/3
+Completed 302 Found in 7ms (ActiveRecord: 1.3ms)
+
+
+Started GET "/roles/3" for ::1 at 2016-04-22 19:33:54 +0300
+Processing by RolesController#show as HTML
+  Parameters: {"id"=>"3"}
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mRole Load (0.1ms)[0m  SELECT  "roles".* FROM "roles" WHERE "roles"."id" = ? LIMIT 1  [["id", 3]]
+  Rendered roles/show.html.erb within layouts/application (0.8ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.4ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.2ms)
+  Rendered layouts/_navigation.html.erb (1.7ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 46ms (Views: 43.6ms | ActiveRecord: 0.2ms)
+
+
+Started GET "/roles" for ::1 at 2016-04-22 19:33:55 +0300
+Processing by RolesController#index as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  Rendered roles/index.html.erb within layouts/application (1.3ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.6ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (2.6ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 114ms (Views: 112.6ms | ActiveRecord: 0.2ms)
+
+
+Started GET "/roles" for ::1 at 2016-04-22 19:33:56 +0300
+Processing by RolesController#index as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  Rendered roles/index.html.erb within layouts/application (1.4ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.4ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (2.3ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 50ms (Views: 49.1ms | ActiveRecord: 0.2ms)
+
+
+Started GET "/platforms" for ::1 at 2016-04-22 19:33:58 +0300
+Processing by PlatformsController#index as HTML
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mPlatform Load (0.2ms)[0m  SELECT "platforms".* FROM "platforms"
+  Rendered platforms/index.html.erb within layouts/application (2.5ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.4ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (2.1ms)
+  Rendered layouts/_messages.html.erb (0.0ms)
+Completed 200 OK in 53ms (Views: 51.9ms | ActiveRecord: 0.3ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:34:16 +0300
+Processing by VisitorsController#index as HTML
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT "platforms".* FROM "platforms"[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mIdeasUser Load (0.1ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2  [["idea_id", 1], ["role_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2  [["idea_id", 1], ["role_id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.0ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2  [["idea_id", 1], ["role_id", 3]]
+  Rendered visitors/index.html.erb within layouts/application (8.1ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  Rendered layouts/_navigation_links_left.html.erb (0.9ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.2ms)
+  Rendered layouts/_navigation.html.erb (2.5ms)
+  Rendered layouts/_messages.html.erb (0.0ms)
+Completed 200 OK in 116ms (Views: 114.1ms | ActiveRecord: 0.8ms)
+
+
+Started DELETE "/logout" for ::1 at 2016-04-22 19:34:18 +0300
+Processing by SessionsController#destroy as HTML
+  Parameters: {"authenticity_token"=>"lcg5QfY5oEXCjeTTxwzWzXjrQexNbd5crd/tp6Kax88cUSg1iaBo5LbdWnsLk0Jdc39NL+HiyfoXKVYCL7mqNQ=="}
+Redirected to http://localhost:3000/
+Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:34:18 +0300
+Processing by VisitorsController#index as HTML
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles"[0m
+  [1m[35mIdea Load (0.1ms)[0m  SELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mIdeasUser Load (0.1ms)[0m  SELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1  [["idea_id", 1], ["action_type", 0]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  [["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2[0m  [["idea_id", 1], ["role_id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  [["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.0ms)[0m  [1mSELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2[0m  [["idea_id", 1], ["role_id", 2]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  [["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.0ms)[0m  [1mSELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2[0m  [["idea_id", 1], ["role_id", 3]]
+  Rendered visitors/index.html.erb within layouts/application (8.6ms)
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_left.html.erb (1.2ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_right.html.erb (1.0ms)
+  Rendered layouts/_navigation.html.erb (3.5ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 56ms (Views: 54.3ms | ActiveRecord: 1.0ms)
+
+
+Started GET "/signup" for ::1 at 2016-04-22 19:34:19 +0300
+Processing by UsersController#new as HTML
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  Rendered users/_form.html.erb (8.9ms)
+  Rendered users/new.html.erb within layouts/application (9.9ms)
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_left.html.erb (1.4ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_right.html.erb (0.9ms)
+  Rendered layouts/_navigation.html.erb (4.4ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 63ms (Views: 62.4ms | ActiveRecord: 0.3ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:34:26 +0300
+Processing by VisitorsController#index as HTML
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT "platforms".* FROM "platforms"[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mIdeasUser Load (0.1ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2  [["idea_id", 1], ["role_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2  [["idea_id", 1], ["role_id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2  [["idea_id", 1], ["role_id", 3]]
+  Rendered visitors/index.html.erb within layouts/application (10.6ms)
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_left.html.erb (1.2ms)
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_right.html.erb (0.6ms)
+  Rendered layouts/_navigation.html.erb (3.0ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 131ms (Views: 128.7ms | ActiveRecord: 1.2ms)
+
+
+Started POST "/users" for ::1 at 2016-04-22 19:34:45 +0300
+Processing by UsersController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"yzM5f2F6Wa11kNGMF5svmy3CD7d1xvI6yDo+4bCDN8ZCqigLHuORDAHAbyTbBLsLJlYDdNlJ5ZxyzIVEPaBaPA==", "user"=>{"name"=>"Amna Al-Sharif", "email"=>"mdosari@qatar.cmu.edu", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "role_id"=>"2"}, "commit"=>"Create User"}
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('mdosari@qatar.cmu.edu') LIMIT 1
+  [1m[36mSQL (0.2ms)[0m  [1mINSERT INTO "users" ("name", "email", "password_digest", "role_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)[0m  [["name", "Amna Al-Sharif"], ["email", "mdosari@qatar.cmu.edu"], ["password_digest", "$2a$10$KuPY0B2wQUYyRYj8Kffm.ONOoEM9DbXJJFzcnX.RRQLEerCMBvDHW"], ["role_id", 2], ["created_at", "2016-04-22 16:34:45.963912"], ["updated_at", "2016-04-22 16:34:45.963912"]]
+  [1m[35m (0.8ms)[0m  commit transaction
+Redirected to http://localhost:3000/users/3
+Completed 302 Found in 79ms (ActiveRecord: 1.2ms)
+
+
+Started GET "/users/3" for ::1 at 2016-04-22 19:34:45 +0300
+Processing by UsersController#show as HTML
+  Parameters: {"id"=>"3"}
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+Redirected to http://localhost:3000/
+Filter chain halted as :authenticate rendered or redirected
+Completed 302 Found in 1ms (ActiveRecord: 0.2ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:34:45 +0300
+Processing by VisitorsController#index as HTML
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT "roles".* FROM "roles"[0m
+  [1m[35mIdea Load (0.1ms)[0m  SELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mIdeasUser Load (0.1ms)[0m  SELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1  [["idea_id", 1], ["action_type", 0]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  [["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2[0m  [["idea_id", 1], ["role_id", 1]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  [["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.0ms)[0m  [1mSELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2[0m  [["idea_id", 1], ["role_id", 2]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  [["idea_id", 1], ["action_type", 1]]
+  [1m[36m (0.0ms)[0m  [1mSELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2[0m  [["idea_id", 1], ["role_id", 3]]
+  Rendered visitors/index.html.erb within layouts/application (7.1ms)
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_left.html.erb (1.6ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_right.html.erb (0.9ms)
+  Rendered layouts/_navigation.html.erb (4.6ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 65ms (Views: 63.7ms | ActiveRecord: 0.9ms)
+
+
+Started GET "/login" for ::1 at 2016-04-22 19:34:47 +0300
+Processing by SessionsController#new as HTML
+  Rendered sessions/new.html.erb within layouts/application (3.4ms)
+  [1m[35mUser Load (0.2ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1
+  Rendered layouts/_navigation_links_left.html.erb (1.5ms)
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" IS NULL LIMIT 1[0m
+  Rendered layouts/_navigation_links_right.html.erb (0.7ms)
+  Rendered layouts/_navigation.html.erb (4.4ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 63ms (Views: 62.3ms | ActiveRecord: 0.2ms)
+
+
+Started POST "/login" for ::1 at 2016-04-22 19:34:51 +0300
+Processing by SessionsController#create as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"qVDWyYLnZL84rXbEDx2zI3o+/v7BRMxxhM1Kkhwc2aUgyce9/X6sHkz9yGzDgiezcaryPW3L29c+O/E3kT+0Xw==", "sessions"=>{"email"=>"mdosari@qatar.cmu.edu", "password"=>"[FILTERED]"}, "commit"=>"Login"}
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."email" = ? LIMIT 1  [["email", "mdosari@qatar.cmu.edu"]]
+Redirected to http://localhost:3000/
+Completed 302 Found in 73ms (ActiveRecord: 0.1ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:34:51 +0300
+Processing by VisitorsController#index as HTML
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT "platforms".* FROM "platforms"[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mIdeasUser Load (0.1ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2  [["idea_id", 1], ["role_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2  [["idea_id", 1], ["role_id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" = 2  [["idea_id", 1], ["role_id", 3]]
+  Rendered visitors/index.html.erb within layouts/application (7.3ms)
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 3]]
+  Rendered layouts/_navigation_links_left.html.erb (1.2ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.5ms)
+  Rendered layouts/_navigation.html.erb (3.5ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 124ms (Views: 122.7ms | ActiveRecord: 0.9ms)
+
+
+Started GET "/ideas" for ::1 at 2016-04-22 19:34:53 +0300
+Processing by IdeasController#index as HTML
+  [1m[35mPlatform Load (0.2ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mIdeasUser Load (0.1ms)[0m  SELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1  [["idea_id", 1], ["action_type", 0]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "roles"."name" FROM "roles" WHERE "roles"."id" IN (0, 1, 0, 2)
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered ideas/index.html.erb within layouts/application (6.4ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.6ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (4.4ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 68ms (Views: 66.8ms | ActiveRecord: 0.7ms)
+
+
+Started GET "/ideas/1" for ::1 at 2016-04-22 19:34:55 +0300
+Processing by IdeasController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36m (0.2ms)[0m  [1mSELECT "roles"."name" FROM "roles" WHERE "roles"."id" IN (0, 1, 0, 2)[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "users".id FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ?[0m  [["idea_id", 1]]
+  Rendered ideas/show.html.erb within layouts/application (3.4ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.3ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.2ms)
+  Rendered layouts/_navigation.html.erb (1.8ms)
+  Rendered layouts/_messages.html.erb (0.0ms)
+Completed 200 OK in 62ms (Views: 60.7ms | ActiveRecord: 0.5ms)
+
+
+Started PUT "/ideas/1/respond" for ::1 at 2016-04-22 19:34:56 +0300
+Processing by IdeasController#respond as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"mmjCw3D+oJUAO9HOxZK76Y1AFokFeavnYbvz0X1yqfQT8dO3D2doNHRrb2YJDS95htQaSqn2vEHbTUh08FHEDg==", "commit"=>"Respond", "id"=>"1"}
+  [1m[35mIdea Load (0.1ms)[0m  SELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "users".id FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ?[0m  [["idea_id", 1]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36m (0.1ms)[0m  [1mbegin transaction[0m
+  [1m[35mUser Load (0.2ms)[0m  SELECT "users".* FROM "users" WHERE "users"."id" IN (1, 2, 3)
+  [1m[36mUser Load (0.0ms)[0m  [1mSELECT "users".* FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ?[0m  [["idea_id", 1]]
+  [1m[35mSQL (0.2ms)[0m  INSERT INTO "ideas_users" ("idea_id", "user_id", "action_type") VALUES (?, ?, ?)  [["idea_id", 1], ["user_id", 3], ["action_type", 1]]
+  [1m[36m (2.0ms)[0m  [1mcommit transaction[0m
+Redirected to http://localhost:3000/ideas/1
+Completed 302 Found in 9ms (ActiveRecord: 2.8ms)
+
+
+Started GET "/ideas/1" for ::1 at 2016-04-22 19:34:56 +0300
+Processing by IdeasController#show as HTML
+  Parameters: {"id"=>"1"}
+  [1m[35mIdea Load (0.1ms)[0m  SELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35m (0.2ms)[0m  SELECT "roles"."name" FROM "roles" WHERE "roles"."id" IN (0, 1, 0, 2)
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users".id FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ?  [["idea_id", 1]]
+  Rendered ideas/show.html.erb within layouts/application (2.4ms)
+  Rendered layouts/_navigation_links_left.html.erb (59.8ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (61.6ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 115ms (Views: 113.9ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:34:58 +0300
+Processing by VisitorsController#index as HTML
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT "platforms".* FROM "platforms"[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mIdeasUser Load (0.1ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.2ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" IN (2, 3)  [["idea_id", 1], ["role_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" IN (2, 3)  [["idea_id", 1], ["role_id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" IN (2, 3)  [["idea_id", 1], ["role_id", 3]]
+  Rendered visitors/index.html.erb within layouts/application (9.0ms)
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 3]]
+  Rendered layouts/_navigation_links_left.html.erb (3.0ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (4.9ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 67ms (Views: 64.7ms | ActiveRecord: 1.1ms)
+
+
+Started GET "/ideas" for ::1 at 2016-04-22 19:36:16 +0300
+Processing by IdeasController#index as HTML
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mIdeasUser Load (0.1ms)[0m  SELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1  [["idea_id", 1], ["action_type", 0]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.2ms)[0m  SELECT "roles"."name" FROM "roles" WHERE "roles"."id" IN (0, 1, 0, 2)
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered ideas/index.html.erb within layouts/application (6.8ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.3ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.2ms)
+  Rendered layouts/_navigation.html.erb (1.8ms)
+  Rendered layouts/_messages.html.erb (0.0ms)
+Completed 200 OK in 51ms (Views: 49.4ms | ActiveRecord: 0.7ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:36:18 +0300
+Processing by VisitorsController#index as HTML
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT "platforms".* FROM "platforms"[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mIdeasUser Load (0.1ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" IN (2, 3)  [["idea_id", 1], ["role_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" IN (2, 3)  [["idea_id", 1], ["role_id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" IN (2, 3)  [["idea_id", 1], ["role_id", 3]]
+  Rendered visitors/index.html.erb within layouts/application (7.7ms)
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 3]]
+  Rendered layouts/_navigation_links_left.html.erb (0.8ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.4ms)
+  Rendered layouts/_navigation.html.erb (2.9ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 58ms (Views: 56.5ms | ActiveRecord: 0.9ms)
+
+
+Started GET "/ideas" for ::1 at 2016-04-22 19:36:19 +0300
+Processing by IdeasController#index as HTML
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mIdeasUser Load (0.1ms)[0m  SELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1  [["idea_id", 1], ["action_type", 0]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "roles"."name" FROM "roles" WHERE "roles"."id" IN (0, 1, 0, 2)
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered ideas/index.html.erb within layouts/application (5.3ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.6ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.4ms)
+  Rendered layouts/_navigation.html.erb (3.3ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 122ms (Views: 120.6ms | ActiveRecord: 0.6ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:36:21 +0300
+Processing by VisitorsController#index as HTML
+  [1m[36mPlatform Load (0.2ms)[0m  [1mSELECT "platforms".* FROM "platforms"[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mIdeasUser Load (0.1ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" IN (2, 3)  [["idea_id", 1], ["role_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" IN (2, 3)  [["idea_id", 1], ["role_id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" IN (2, 3)  [["idea_id", 1], ["role_id", 3]]
+  Rendered visitors/index.html.erb within layouts/application (10.4ms)
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 3]]
+  Rendered layouts/_navigation_links_left.html.erb (0.9ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.2ms)
+  Rendered layouts/_navigation.html.erb (2.6ms)
+  Rendered layouts/_messages.html.erb (0.0ms)
+Completed 200 OK in 57ms (Views: 54.6ms | ActiveRecord: 1.2ms)
+
+
+Started GET "/ideas" for ::1 at 2016-04-22 19:36:26 +0300
+Processing by IdeasController#index as HTML
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mIdeasUser Load (0.1ms)[0m  SELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1  [["idea_id", 1], ["action_type", 0]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "roles"."name" FROM "roles" WHERE "roles"."id" IN (0, 1, 0, 2)
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered ideas/index.html.erb within layouts/application (6.0ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.3ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.2ms)
+  Rendered layouts/_navigation.html.erb (2.0ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 53ms (Views: 51.6ms | ActiveRecord: 0.7ms)
+
+
+Started GET "/" for ::1 at 2016-04-22 19:36:27 +0300
+Processing by VisitorsController#index as HTML
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT "platforms".* FROM "platforms"[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT "roles".* FROM "roles"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36mIdeasUser Load (0.1ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  [1m[36m (0.1ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" IN (2, 3)  [["idea_id", 1], ["role_id", 1]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" IN (2, 3)  [["idea_id", 1], ["role_id", 2]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT "ideas_users"."user_id" FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?[0m  [["idea_id", 1], ["action_type", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "users"."name" FROM "users" INNER JOIN "ideas_users" ON "users"."id" = "ideas_users"."user_id" WHERE "ideas_users"."idea_id" = ? AND "users"."role_id" = ? AND "users"."id" IN (2, 3)  [["idea_id", 1], ["role_id", 3]]
+  Rendered visitors/index.html.erb within layouts/application (7.4ms)
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 3]]
+  Rendered layouts/_navigation_links_left.html.erb (1.0ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.2ms)
+  Rendered layouts/_navigation.html.erb (2.6ms)
+  Rendered layouts/_messages.html.erb (0.0ms)
+Completed 200 OK in 117ms (Views: 115.8ms | ActiveRecord: 1.0ms)
+
+
+Started GET "/ideas" for ::1 at 2016-04-22 19:36:29 +0300
+Processing by IdeasController#index as HTML
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT "platforms".* FROM "platforms"
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT "ideas".* FROM "ideas"  ORDER BY "ideas"."created_at" DESC[0m
+  [1m[35mIdeasUser Load (0.1ms)[0m  SELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1  [["idea_id", 1], ["action_type", 0]]
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35m (0.1ms)[0m  SELECT "roles"."name" FROM "roles" WHERE "roles"."id" IN (0, 1, 0, 2)
+  [1m[36mPlatform Load (0.1ms)[0m  [1mSELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1[0m  [["id", 1]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mCACHE (0.0ms)[0m  [1mSELECT  "ideas_users".* FROM "ideas_users" WHERE "ideas_users"."idea_id" = ? AND "ideas_users"."action_type" = ?  ORDER BY "ideas_users"."id" ASC LIMIT 1[0m  [["idea_id", 1], ["action_type", 0]]
+  [1m[35mCACHE (0.0ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 1]]
+  Rendered ideas/index.html.erb within layouts/application (5.9ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.3ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.2ms)
+  Rendered layouts/_navigation.html.erb (1.8ms)
+  Rendered layouts/_messages.html.erb (0.1ms)
+Completed 200 OK in 54ms (Views: 52.3ms | ActiveRecord: 0.6ms)
+
+
+Started GET "/users/3" for ::1 at 2016-04-22 19:38:11 +0300
+Processing by UsersController#show as HTML
+  Parameters: {"id"=>"3"}
+  [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1[0m  [["id", 3]]
+  [1m[35mUser Load (0.1ms)[0m  SELECT  "users".* FROM "users" WHERE "users"."id" = ? LIMIT 1  [["id", 3]]
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT  "roles".* FROM "roles" WHERE "roles"."id" = ? LIMIT 1[0m  [["id", 2]]
+  Rendered users/show.html.erb within layouts/application (1.9ms)
+  Rendered layouts/_navigation_links_left.html.erb (0.5ms)
+  Rendered layouts/_navigation_links_right.html.erb (0.3ms)
+  Rendered layouts/_navigation.html.erb (3.4ms)
+  Rendered layouts/_messages.html.erb (0.0ms)
+Completed 200 OK in 57ms (Views: 55.5ms | ActiveRecord: 0.3ms)

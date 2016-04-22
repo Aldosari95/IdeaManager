@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<h3>Welcome</h3>
+
+Platform:
+<%= link_to "All", root_path(platform_id: nil) %>,
+<%- @platforms.each do |platform| %>
+  <%= link_to platform.name, root_path(platform_id: platform.id) %>,
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>
+        Name
+        <%= link_to "ASC", root_path(order: 'asc') %>
+        <%= link_to "DESC", root_path(order: 'desc') %>
+        <%= link_to "NEWEST", root_path(order: 'newest') %>
+        <%= link_to "OLDEST", root_path(order: 'oldest') %>
+      </th>
+      <th>Platform</th>
+      <th>Owner</th>
+      <% @roles.each do |role| %>
+        <th><%= role.name.capitalize %></th>
+      <% end %>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%- @ideas.each do |idea| %>
+      <tr>
+        <td><%= idea.name %></td>
+        <td><%= idea.platform.try(:name) %></td>
+        <td><%= idea.try(:owner).try(:name) %></td>
+        <% @roles.each do |role| %>
+          <td><%= idea.arr_name_respond(role) %></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Idea', new_idea_path %>

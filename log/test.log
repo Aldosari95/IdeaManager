@@ -1,0 +1,219 @@
+  [1m[36m (1.1ms)[0m  [1mCREATE TABLE "ideas" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "description" text, "additional_info" varchar, "platform_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, "role_ids" varchar) [0m
+  [1m[35m (0.9ms)[0m  CREATE TABLE "ideas_users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "idea_id" integer, "action_type" integer) 
+  [1m[36m (0.1ms)[0m  [1mselect sqlite_version(*)[0m
+  [1m[35m (1.1ms)[0m  CREATE  INDEX "index_ideas_users_on_idea_id" ON "ideas_users" ("idea_id")
+  [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_ideas_users_on_idea_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_ideas_users_on_idea_id' AND type='index'
+[0m
+  [1m[35m (0.8ms)[0m  CREATE  INDEX "index_ideas_users_on_user_id" ON "ideas_users" ("user_id")
+  [1m[36m (0.7ms)[0m  [1mCREATE TABLE "platforms" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) [0m
+  [1m[35m (0.9ms)[0m  CREATE TABLE "roles" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) 
+  [1m[36m (1.0ms)[0m  [1mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar, "email" varchar, "password" varchar, "password_digest" varchar, "role_id" integer, "admin" boolean DEFAULT 'f', "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL) [0m
+  [1m[35m (0.9ms)[0m  CREATE TABLE "schema_migrations" ("version" varchar NOT NULL) 
+  [1m[36m (0.9ms)[0m  [1mCREATE UNIQUE INDEX "unique_schema_migrations" ON "schema_migrations" ("version")[0m
+  [1m[35m (0.1ms)[0m  SELECT version FROM "schema_migrations"
+  [1m[36m (0.7ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20160422141426')[0m
+  [1m[35m (0.7ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20160417105652')
+  [1m[36m (0.7ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20160417105714')[0m
+  [1m[35m (0.7ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20160418183209')
+  [1m[36m (0.7ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20160418184340')[0m
+  [1m[35m (0.5ms)[0m  INSERT INTO "schema_migrations" (version) VALUES ('20160418184341')
+  [1m[36m (0.7ms)[0m  [1mINSERT INTO "schema_migrations" (version) VALUES ('20160422103016')[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM "ideas"[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "ideas" ("name", "description", "additional_info", "platform_id", "role_ids", "created_at", "updated_at", "id") VALUES ('MyString', 'Description', 'Additional info', 1, '---
+- 1
+', '2016-04-22 16:29:53', '2016-04-22 16:29:53', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "ideas" ("name", "description", "additional_info", "platform_id", "role_ids", "created_at", "updated_at", "id") VALUES ('MyString', 'Description', 'Additional info', 1, '---
+- 1
+', '2016-04-22 16:29:53', '2016-04-22 16:29:53', 298486374)[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM "platforms"
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "platforms" ("name", "created_at", "updated_at", "id") VALUES ('MyString', '2016-04-22 16:29:53', '2016-04-22 16:29:53', 980190962)[0m
+  [1m[35mFixture Insert (0.0ms)[0m  INSERT INTO "platforms" ("name", "created_at", "updated_at", "id") VALUES ('MyString', '2016-04-22 16:29:53', '2016-04-22 16:29:53', 298486374)
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM "roles"[0m
+  [1m[35mFixture Insert (0.0ms)[0m  INSERT INTO "roles" ("name", "created_at", "updated_at", "id") VALUES ('Designer', '2016-04-22 16:29:53', '2016-04-22 16:29:53', 980190962)
+  [1m[36mFixture Insert (0.0ms)[0m  [1mINSERT INTO "roles" ("name", "created_at", "updated_at", "id") VALUES ('Developer', '2016-04-22 16:29:53', '2016-04-22 16:29:53', 298486374)[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM "users"
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO "users" ("name", "email", "password", "role_id", "admin", "created_at", "updated_at", "id") VALUES ('Tartan', 'tartan@cmu.edu', 'foobar', 1, 't', '2016-04-22 16:29:53', '2016-04-22 16:29:53', 135138680)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO "users" ("name", "email", "password", "role_id", "admin", "created_at", "updated_at", "id") VALUES ('MyString1', 'email1@example.com', 'MyString1', 1, 'f', '2016-04-22 16:29:53', '2016-04-22 16:29:53', 980190962)
+  [1m[36mFixture Insert (0.0ms)[0m  [1mINSERT INTO "users" ("name", "email", "password", "role_id", "admin", "created_at", "updated_at", "id") VALUES ('MyString2', 'email2@example.com', 'MyString2', 1, 'f', '2016-04-22 16:29:53', '2016-04-22 16:29:53', 298486374)[0m
+  [1m[35m (0.8ms)[0m  commit transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+--------------------------------------
+UserTest: test_email_should_be_present
+--------------------------------------
+  [1m[35m (0.1ms)[0m  SAVEPOINT active_record_1
+  [1m[36mRole Exists (0.2ms)[0m  [1mSELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Developer' LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  ROLLBACK TO SAVEPOINT active_record_1
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT  "roles".* FROM "roles"  ORDER BY "roles"."id" ASC LIMIT 1[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  begin transaction
+------------------------------------------
+UserTest: test_name_should_not_be_too_long
+------------------------------------------
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mRole Exists (0.1ms)[0m  SELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Developer' LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT  "roles".* FROM "roles"  ORDER BY "roles"."id" ASC LIMIT 1
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('tartan1@cmu.edu') LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  rollback transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+-------------------------------------------
+UserTest: test_email_should_not_be_too_long
+-------------------------------------------
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mRole Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Developer' LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  ROLLBACK TO SAVEPOINT active_record_1
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT  "roles".* FROM "roles"  ORDER BY "roles"."id" ASC LIMIT 1[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@cmu.edu') LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  begin transaction
+---------------------------------------------------------------
+UserTest: test_email_validation_should_reject_invalid_addresses
+---------------------------------------------------------------
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mRole Exists (0.1ms)[0m  SELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Developer' LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT  "roles".* FROM "roles"  ORDER BY "roles"."id" ASC LIMIT 1
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example,com') LIMIT 1[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user_at_foo.org') LIMIT 1
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user.name@example.') LIMIT 1[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('foo@bar_baz.com') LIMIT 1
+  [1m[36mUser Exists (0.0ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('foo@bar+baz.com') LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  rollback transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+-------------------------------------------------------------
+UserTest: test_email_validation_should_accept_valid_addresses
+-------------------------------------------------------------
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mRole Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Developer' LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  ROLLBACK TO SAVEPOINT active_record_1
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT  "roles".* FROM "roles"  ORDER BY "roles"."id" ASC LIMIT 1[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('user@example.com') LIMIT 1
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('USER@foo.COM') LIMIT 1[0m
+  [1m[35mUser Exists (0.0ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('A_US-ER@foo.bar.org') LIMIT 1
+  [1m[36mUser Exists (0.0ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('first.last@foo.jp') LIMIT 1[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('alice+bob@baz.cn') LIMIT 1
+  [1m[36m (0.1ms)[0m  [1mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+-------------------------------------
+UserTest: test_name_should_be_present
+-------------------------------------
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mRole Exists (0.1ms)[0m  SELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Developer' LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT  "roles".* FROM "roles"  ORDER BY "roles"."id" ASC LIMIT 1
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('tartan1@cmu.edu') LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  rollback transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+------------------------------
+UserTest: test_should_be_valid
+------------------------------
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mRole Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Developer' LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  ROLLBACK TO SAVEPOINT active_record_1
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT  "roles".* FROM "roles"  ORDER BY "roles"."id" ASC LIMIT 1[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('tartan1@cmu.edu') LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  begin transaction
+----------------------------------------------------
+UserTest: test_password_should_have_a_minimum_length
+----------------------------------------------------
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mRole Exists (0.1ms)[0m  SELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Developer' LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35mRole Load (0.1ms)[0m  SELECT  "roles".* FROM "roles"  ORDER BY "roles"."id" ASC LIMIT 1
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('tartan1@cmu.edu') LIMIT 1[0m
+  [1m[35m (0.1ms)[0m  rollback transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+-----------------------------------------------
+UserTest: test_email_addresses_should_be_unique
+-----------------------------------------------
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mRole Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Developer' LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  ROLLBACK TO SAVEPOINT active_record_1
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT  "roles".* FROM "roles"  ORDER BY "roles"."id" ASC LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('tartan1@cmu.edu') LIMIT 1[0m
+  [1m[35mSQL (0.3ms)[0m  INSERT INTO "users" ("name", "email", "password_digest", "role_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?)  [["name", "tartan"], ["email", "tartan1@cmu.edu"], ["password_digest", "$2a$04$w4ksZ9J8V//7QNfL.nmkZO7FvIZx3ZoVKA8rOLNANku6idJUXY4ZG"], ["role_id", 298486374], ["created_at", "2016-04-22 16:29:53.496627"], ["updated_at", "2016-04-22 16:29:53.496627"]]
+  [1m[36m (0.0ms)[0m  [1mRELEASE SAVEPOINT active_record_1[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users" WHERE LOWER("users"."email") = LOWER('TARTAN1@CMU.EDU') LIMIT 1
+  [1m[36m (0.3ms)[0m  [1mrollback transaction[0m
+  [1m[35m (0.1ms)[0m  begin transaction
+------------------------------------------------
+IdeaTest: test_additional_info_should_be_present
+------------------------------------------------
+  [1m[36mIdea Load (0.2ms)[0m  [1mSELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1[0m  [["id", 980190962]]
+  [1m[35m (0.1ms)[0m  rollback transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+------------------------------
+IdeaTest: test_should_be_valid
+------------------------------
+  [1m[35mIdea Load (0.1ms)[0m  SELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1  [["id", 980190962]]
+  [1m[36m (0.0ms)[0m  [1mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  begin transaction
+--------------------------------------------
+IdeaTest: test_description_should_be_present
+--------------------------------------------
+  [1m[36mIdea Load (0.1ms)[0m  [1mSELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1[0m  [["id", 980190962]]
+  [1m[35m (0.0ms)[0m  rollback transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+-------------------------------------
+IdeaTest: test_name_should_be_present
+-------------------------------------
+  [1m[35mIdea Load (0.1ms)[0m  SELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1  [["id", 980190962]]
+  [1m[36m (0.0ms)[0m  [1mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  begin transaction
+--------------------------------------------
+IdeaTest: test_platform_id_should_be_present
+--------------------------------------------
+  [1m[36mIdea Load (0.0ms)[0m  [1mSELECT  "ideas".* FROM "ideas" WHERE "ideas"."id" = ? LIMIT 1[0m  [["id", 980190962]]
+  [1m[35m (0.0ms)[0m  rollback transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+-----------------------------------------
+PlatformTest: test_name_should_be_present
+-----------------------------------------
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 980190962]]
+  [1m[36mPlatform Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "platforms" WHERE ("platforms"."name" = '' AND "platforms"."id" != 980190962) LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  rollback transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+----------------------------------------
+PlatformTest: test_name_should_be_unique
+----------------------------------------
+  [1m[35mPlatform Load (0.1ms)[0m  SELECT  "platforms".* FROM "platforms" WHERE "platforms"."id" = ? LIMIT 1  [["id", 980190962]]
+  [1m[36m (0.0ms)[0m  [1mSAVEPOINT active_record_1[0m
+  [1m[35mPlatform Exists (0.1ms)[0m  SELECT  1 AS one FROM "platforms" WHERE ("platforms"."name" = 'MyString' AND "platforms"."id" != 980190962) LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mROLLBACK TO SAVEPOINT active_record_1[0m
+  [1m[35mPlatform Exists (0.0ms)[0m  SELECT  1 AS one FROM "platforms" WHERE "platforms"."name" = 'MyString' LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  begin transaction
+-------------------------------------
+RoleTest: test_name_should_be_present
+-------------------------------------
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT  "roles".* FROM "roles" WHERE "roles"."id" = ? LIMIT 1[0m  [["id", 980190962]]
+  [1m[35mRole Exists (0.1ms)[0m  SELECT  1 AS one FROM "roles" WHERE ("roles"."name" = '' AND "roles"."id" != 980190962) LIMIT 1
+  [1m[36m (0.0ms)[0m  [1mrollback transaction[0m
+  [1m[35m (0.0ms)[0m  begin transaction
+------------------------------------
+RoleTest: test_name_should_be_unique
+------------------------------------
+  [1m[36mRole Load (0.1ms)[0m  [1mSELECT  "roles".* FROM "roles" WHERE "roles"."id" = ? LIMIT 1[0m  [["id", 980190962]]
+  [1m[35m (0.0ms)[0m  SAVEPOINT active_record_1
+  [1m[36mRole Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "roles" WHERE ("roles"."name" = 'Designer' AND "roles"."id" != 980190962) LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  RELEASE SAVEPOINT active_record_1
+  [1m[36mRole Exists (0.0ms)[0m  [1mSELECT  1 AS one FROM "roles" WHERE "roles"."name" = 'Designer' LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  rollback transaction
+  [1m[36m (0.0ms)[0m  [1mbegin transaction[0m
+------------------------------
+RoleTest: test_should_be_valid
+------------------------------
+  [1m[35mRole Load (0.1ms)[0m  SELECT  "roles".* FROM "roles" WHERE "roles"."id" = ? LIMIT 1  [["id", 980190962]]
+  [1m[36mRole Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "roles" WHERE ("roles"."name" = 'Designer' AND "roles"."id" != 980190962) LIMIT 1[0m
+  [1m[35m (0.0ms)[0m  rollback transaction
