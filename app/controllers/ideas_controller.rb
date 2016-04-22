@@ -4,7 +4,7 @@ class IdeasController < ApplicationController
   before_action :authenticate, only: [:new, :create, :edit, :update, :destroy, :show]
 
   def index
-    @platforms = Platform.all
+    @platforms = Platform.all 
     if params[:order] == "asc"
       @ideas = Idea.all.order(name: :asc)
     elsif params[:order] == "desc"

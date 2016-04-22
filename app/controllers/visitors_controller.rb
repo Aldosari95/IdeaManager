@@ -10,7 +10,7 @@ class VisitorsController < ApplicationController
       @ideas = Idea.all.order(created_at: :asc)
     else
       @ideas = Idea.all.order(created_at: :desc)
-    end
+    end 
 
     @ideas = @ideas.where(platform_id: params[:platform_id]) if params[:platform_id]
     @roles = Role.all
